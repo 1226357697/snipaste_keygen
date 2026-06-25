@@ -10,8 +10,8 @@
 - 替换 Snipaste_patched.exe 到 Snipaste程序目录中的Snipaste.exe
 
 ## 效果图
-![效果图](.\assets\效果图.png)
+![效果图](./assets/效果图.png)
 
 ## 补丁图
 仅补丁一个返回值
-![效果图](.\assets\补丁图.png)
+![效果图](./assets/补丁图.png)
