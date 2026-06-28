@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.exceptions import InvalidSignature
 import os
 from device_id import *
+import argparse
 
 class Ed25519Helper:
     """Ed25519签名验证工具类，与CryptoPP兼容"""
@@ -370,24 +371,16 @@ def simulate_client(code:str):
 PRIVATE_KEY =bytes.fromhex('951743f1381818ec1af9a32a2eafce42c6261f5089468ef863e7b903c183b3f6')
 PUBLIC_KEY=bytes.fromhex('1ebf8f1197d33a99aee6c625e306739eb9bf1c2806324eb7b83a09933062aa04')
 
-def test():
-    # demo_ed25519_workflow()
-    # compatibility_test()
-    dom=gen_dom()
-    # print(f'dom:{dom}')
-    # hwi.machineid 填明文设备码即可(JSON 层明文,客户端内部自行编解码)
-    # = blake2s('Snipaste 2','1', 本机MachineGuid)[-9:] -> hex大写 -> 4-8分段 + 校验 + '1'
-    machine_guid=get_machine_guid()
-    machineid=gen_expected_machineid(machine_guid,9)
-    print(f'machineid:{machineid}')
+
+def activation_machine(name:str, dom:str, machineid:str) -> str:
 
     # print(f'machineid:{machineid}')
-    s=make_json('ikun','ikun@kunkun.com',dom,machineid).encode()
-    print('[-]license info:',s.decode())
+    s=make_json(name,'12138@yan.com',dom,machineid).encode()
+    # print('[-]license info:',s.decode())
     sig=Ed25519Helper.sign_message(PRIVATE_KEY,s)
     # print(f'sig:{sig.hex()}')
     ok=Ed25519Helper.verify_signature(PUBLIC_KEY,s,sig)
-    print('[-]verify:',ok)
+    # print('[-]verify:',ok)
 
     # 当前版编码流程。客户端解码共 3 次 XOR(都用 sig 当 key):
     #   A: postProcess gzip 前   body ^= sig
@@ -404,10 +397,59 @@ def test():
     part1=calculate_adjacent_char_diff_sum(b64_data.decode())
     port0='0'
     code=f'{port0}{part1}-{b64_data.decode()}'
-    print('-------------------------------------------------------------')
-    print(code)
-    simulate_client(code)
-    return code
+    return  code
+
+def activation_host_machine():
+    dom=gen_dom()
+    machine_guid=get_machine_guid()
+    machineid=gen_expected_machineid(machine_guid,9)
+
+
+    activation_code = activation_machine('ikun', dom, machineid)
+    print('-'*50)
+    print('The activation code for the host machine is:')
+    print(activation_code)
+    print('-'*50)
+    
+
+# def activation_host_machine():
+#     # demo_ed25519_workflow()
+#     # compatibility_test()
+#     dom=gen_dom()
+#     # print(f'dom:{dom}')
+#     # hwi.machineid 填明文设备码即可(JSON 层明文,客户端内部自行编解码)
+#     # = blake2s('Snipaste 2','1', 本机MachineGuid)[-9:] -> hex大写 -> 4-8分段 + 校验 + '1'
+#     machine_guid=get_machine_guid()
+#     machineid=gen_expected_machineid(machine_guid,9)
+#     print(f'machineid:{machineid}')
+
+#     # print(f'machineid:{machineid}')
+#     s=make_json('ikun','ikun@kunkun.com',dom,machineid).encode()
+#     print('[-]license info:',s.decode())
+#     sig=Ed25519Helper.sign_message(PRIVATE_KEY,s)
+#     # print(f'sig:{sig.hex()}')
+#     ok=Ed25519Helper.verify_signature(PUBLIC_KEY,s,sig)
+#     print('[-]verify:',ok)
+
+#     # 当前版编码流程。客户端解码共 3 次 XOR(都用 sig 当 key):
+#     #   A: postProcess gzip 前   body ^= sig
+#     #      postProcess           body = gunzip(body)
+#     #   B: postProcess gzip 后   body ^= sig
+#     #   C: 验签前(sub_14024B1D0) body ^= sig
+#     #   B、C 抵消 → 验签 message = gunzip(raw_body ^ sig),需等于签名时的明文 JSON
+#     #   故生成端(逆): raw_body = gzip(JSON) ^ sig  —— 只一次 XOR,在 gzip 之后
+#     body = gzip_compress(s)       # gzip(JSON)
+#     body = s_xor(sig, body)       # ^ sig
+#     data = sig + body             # header(sig 64字节) + body
+
+#     b64_data=base64.standard_b64encode(data)
+#     part1=calculate_adjacent_char_diff_sum(b64_data.decode())
+#     port0='0'
+#     code=f'{port0}{part1}-{b64_data.decode()}'
+#     print('-------------------------------------------------------------')
+#     print(code)
+#     simulate_client(code)
+#     return code
 def gen_k():
     print("1. 生成Ed25519密钥对...")
     while True:
@@ -419,8 +461,39 @@ def gen_k():
         print(f"   私钥(hex): {private_key.hex()}")
         print(f"   公钥(hex): {public_key.hex()}")
         break
+    
+def activation_client_machine(name:str, device_info:str):
+    decoded_bytes = base64.b64decode(device_info)
+    decompress_bytes = gzip_decompress(decoded_bytes)
+    device_info_json = json.loads(decompress_bytes.decode())
+    dom = device_info_json['dom']
+    machineid = device_info_json['machineid']
+
+    activation_code = activation_machine('ikun', dom, machineid)
+    print('-'*50)
+    print('The activation code for the client machine is:')
+    print(activation_code)
+    print('-'*50)
+
+    return
+
+def main():
+    parser = argparse.ArgumentParser(description='This is a snipaste keygen')
+    parser.add_argument('-d', '--device', default=None, help="The client device information")
+    parser.add_argument('-n', '--name', default=None, help="The client device name")
+
+    args = parser.parse_args()
+
+    if args.device and args.name:
+        activation_client_machine(args.name, args.device)
+    else:
+        activation_host_machine()
+
+    return 0
+
 if __name__ == "__main__":
+    SystemExit(main())
     # gen_k()
-    test()
+    # test()
     pass
 

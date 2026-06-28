@@ -1,0 +1,22 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+blake2 = "0.10"
+serde = {version = "1", features = ["derive"]}
+serde_json = "1"
+flate2 = "1"
+base64 = "0.22"
+
+[dependencies.windows-sys]
+version = "0.59"
+features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_Threading",
+    "Win32_Foundation",
+    "Win32_NetworkManagement_NetManagement",
+    "Win32_System_Registry"
+]
