@@ -63,7 +63,7 @@ The device information is H4sIAAAAAAAA/wE0AMv/eyJkxxxxxxxxxx5TRSIsIm1hY2hpbmVpZC
 
 ```
 --------------------------------------------------
-The activation code for the host machine is:
+The activation code for the client machine is:
 0w-vKrYmZZXP0Tv0xxxxxxx1FPZccEzL4dao8L7xt6HtDbWOBJfbeGm7U7SHvvUxEpWz6U2TptvaiI88G8yrwAYBaMh0JmWVz9E7dgjZ+RGhuRfXy6xxxxxxxxxkt/mXP28RBIBjS6Y1SD86AATr5dqIxbSm9S0HqNIDl8UDFvVwu1exY7k1nWvR2BoDDRQv4CZ4JOhOTFyCrhSqvJCKQN3SfxxxxxxxxxxG7L3q7x0raWDbrUCx+sJ1lynR6unisNNm0/+DUFbUKu2x72kJ18U91jqmC8APnqs2VhQS9dAA6NrMfKJ2ESJ+pyrNMQbeK0N8Xjmm5MzKIRf10DilnPOrgI++OlVj9E
 --------------------------------------------------
 ```
