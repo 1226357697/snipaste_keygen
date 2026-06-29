@@ -4,14 +4,9 @@
 
 本项目参考自：[Snipaste-2.10.8-x64 离线激活记录 - DirWangK - 博客园](https://www.cnblogs.com/DirWang/p/19258416) 文章。
 
-## 步骤
-
-- python 第三方库安装命令: `pip install -r requirements.txt`
-- 替换 Snipaste_patched.exe 到 Snipaste程序目录中的Snipaste.exe
-
 ## 详细步骤
 
-### 本机激活
+### 情况一：本机激活
 
 #### 安装python 第三方库
 
@@ -34,7 +29,7 @@ The activation code for the host machine is:
 --------------------------------------------------
 ```
 
-### 客户端激活
+### 情况二：客户端激活
 
 #### 客户端操作
 
