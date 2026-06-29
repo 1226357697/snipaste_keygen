@@ -57,7 +57,7 @@ The device information is H4sIAAAAAAAA/wE0AMv/eyJkxxxxxxxxxx5TRSIsIm1hY2hpbmVpZC
 
 `python keygen\main.py -n [name] -d  [device_info]`
 
-示例: `python keygen\main.py -nikun -d  H4sIAAAAAAAA/wE0AMv/eyJkxxxxxxxxxx5TRSIsIm1hY2hpbmVpZCI6IkRFRkItOTExM0Y1OTYtOURENjdxxxxxxxxxxRA0AAAA`
+示例: `python keygen\main.py -n ikun -d  H4sIAAAAAAAA/wE0AMv/eyJkxxxxxxxxxx5TRSIsIm1hY2hpbmVpZCI6IkRFRkItOTExM0Y1OTYtOURENjdxxxxxxxxxxRA0AAAA`
 
 输出示例：
 
